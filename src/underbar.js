@@ -52,6 +52,18 @@
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
   _.each = function(collection, iterator) {
+    // iterate over collection
+    if (Array.isArray(collection)) {
+      for (var i = 0; i < collection.length; i++) {
+        // each iteration, pass element as argument for iterator
+        collection[i] = iterator(collection[i], i, collection);
+      }
+    } else {
+      for (var key in collection) {
+        collection[key] = iterator(collection[key], key, collection);
+      }
+    }
+
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
@@ -73,16 +85,47 @@
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
+    var result = [];
+    // iterate over array
+    for (var i = 0; i < collection.length; i++) {
+      if (test(collection[i])) {
+        result.push(collection[i]);
+      }
+
+    }
+    return result;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    return _.filter(collection, function(element) {
+      if (!test(element)) {
+        return element;
+      }
+    });
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
+    var result = [];
+
+    for (var i = 0; i < array.length; i++) {
+      // check if result array includes current element
+      // if sorted is true
+      if (isSorted) {
+        // if current element matches next element
+        if (array[i] === array[i + 1]) {
+          result.push(array[i]);
+          return result;
+        }
+      }
+      if (!result.includes(array[i])) {
+        result.push(array[i]);
+      }
+    }
+    return result;
   };
 
 
